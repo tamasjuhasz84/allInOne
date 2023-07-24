@@ -1,7 +1,7 @@
 const { Sequelize, Model, DataTypes, QueryTypes } = require("sequelize");
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: "./db.json"
+  storage: "./database.sqlite"
 });
 
 const User = sequelize.define("user", {
