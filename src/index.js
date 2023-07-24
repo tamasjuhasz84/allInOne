@@ -1,7 +1,7 @@
 const { Sequelize, QueryTypes } = require("sequelize");
 const sequelize = new Sequelize({
     dialect: "sqlite",
-    storage: "./database.sqlite3"
+    storage: "./db.json"
   });
 
 const express = require('express');
