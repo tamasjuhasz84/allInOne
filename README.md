@@ -1,2 +1,5 @@
 # allInOne
-docker, npm/yarn, http/https tls, express open api, sequelize, git semantic release, pullrequest, tag, merg, log gyakorló feladat
+
+npm/yarn, express, open api, sequelize, git semantic release, husky gyakorló feladat
+
+npm start

@@ -17,7 +17,8 @@ const User = sequelize.define("user", {
 });
 
 (async () => {
-    await sequelize.sync();
+    await sequelize.drop();
+    await sequelize.sync({ force: true });
     await User.create({ name: "Juhasz Tamas", age: 39, activeWorker: true });
     await User.create({ name: "Balogh Tibor", age: 25, os: "Linux", activeWorker: true });
     await User.create({ name: "Varga Anna", age: 45, activeWorker: true });

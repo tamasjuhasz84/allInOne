@@ -1,11 +1,12 @@
 {
   "name": "allinone",
   "version": "1.0.0",
-  "description": "docker, npm/yarn, http/https tls, express open api, sequelize, git semantic release, pullrequest, tag, merg, log gyakorló feladat",
+  "description": "npm/yarn, express, open api, sequelize, git semantic release, husky gyakorló feladat",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "start": "concurrently \"node src/server.js\" \"node src/index.js\""
   },
   "keywords": [],
   "author": "",
@@ -14,13 +15,13 @@
     "@commitlint/config-conventional": "^17.6.7",
     "express": "^4.18.2",
     "lint-staged": "^13.2.3",
-    "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
     "semantic-release": "^21.0.7",
     "sequelize": "^6.32.1",
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
+    "concurrently": "^8.2.0",
     "husky": "^8.0.3",
     "sequelize-cli": "^6.6.1"
   },
