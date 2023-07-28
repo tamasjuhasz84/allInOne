@@ -28,17 +28,65 @@ async function employees (req,res,next){
 
 app.use(employees);
 
-app.get('/users',(req, res, next)=>{
-    res.render('users',{
-        proba: res.locals.employees
-    });
+app.use((req, res, next)=>{
+  if(req.query.errorMes === 'unauthozized'){
+      res.locals.errorMes = `Validation problem.`
+  }else{
+      res.locals.errorMes = ``
+  }
+  next()
 });
 
-app.get('/',(req, res, next)=>{
-  res.render("index", {
+app.get('/', (req, res, next)=>{
+  const errorMes = req.query.errorMes;
+  if(errorMes === 'unauthozized'){
+  }
+  res.render('login')
+});
+
+app.post('/process_login',(req, res, next)=>{
+  const password = req.body.password;
+  const username = req.body.username;
+  (async () => {
+    res.locals.pass = await sequelize.query("SELECT pw FROM `Employees` WHERE name LIKE :search_name", { 
+      replacements: { search_name: username }, type: QueryTypes.SELECT }); 
+  
+    if(password == res.locals.pass[0].pw){
+      res.cookie('username',username)
+      res.redirect('/welcome')
+    }else{
+      res.redirect('/?msg=unauthorized')
+    }
+
+  })();
+});
+
+app.get('/welcome',(req, res, next)=>{
+    res.render('welcome',{
+      username: req.cookies.username,
       firstKey: "Ez az első kulcs értéke!",
       secondKey: "Ez a második kulcs értéke!"
   });
 });
+
+app.param('id',(req, res, next, id)=>{
+  next();
+});
+
+app.get('/info/:infoId/:link',(req, res, next)=>{
+  res.send(`<h1>Main ${req.params.infoId} - ${req.params.link}</h1><p><a href="/logout">Log out</a></p>`)
+});
+
+app.get('/users',(req, res, next)=>{
+    res.render('users',{
+        fullTable: res.locals.employees
+    });
+});
+
+app.get('/logout',(req, res, next)=>{
+  res.clearCookie('username');
+  res.redirect('/')
+});
+
 
 app.listen( port, console.log( `http://127.0.0.1:${ port }` ) );

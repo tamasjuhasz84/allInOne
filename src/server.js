@@ -11,7 +11,8 @@ const User = sequelize.define("user", {
     type: DataTypes.TEXT,
     defaultValue: 'windows'
   },
-  activeWorker: DataTypes.BOOLEAN
+  activeWorker: DataTypes.BOOLEAN,
+  pw: DataTypes.INTEGER,
 }, {
   tableName: 'Employees'
 });
@@ -19,9 +20,9 @@ const User = sequelize.define("user", {
 (async () => {
     await sequelize.drop();
     await sequelize.sync({ force: true });
-    await User.create({ name: "Juhasz Tamas", age: 39, activeWorker: true });
-    await User.create({ name: "Balogh Tibor", age: 25, os: "Linux", activeWorker: true });
-    await User.create({ name: "Varga Anna", age: 45, activeWorker: true });
-    await User.create({ name: "Kovacs Imre", age: 30, os: "Linux", activeWorker: false });
+    await User.create({ name: "Tamas", age: 39, activeWorker: true, pw: 123 });
+    await User.create({ name: "Balazs", age: 25, os: "Linux", activeWorker: true, pw: 456 });
+    await User.create({ name: "Anna", age: 45, activeWorker: true, pw: 789 });
+    await User.create({ name: "Imre", age: 30, os: "Linux", activeWorker: false, pw: 987 });
 })();
 
