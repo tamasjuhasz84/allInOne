@@ -11,7 +11,9 @@ const app     = express();
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const port    = process.env.PORT || 1024;
+const routerForUsers = require('./routerForUsers');
 
+app.use('/users',routerForUsers);
 app.use(helmet());
 app.use(cookieParser());
 app.use(express.static('public'));
@@ -20,13 +22,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname, 'views'));
-
-async function employees (req,res,next){
-  res.locals.employees = await sequelize.query("SELECT * FROM `Employees`", { type: QueryTypes.SELECT }); 
-  next();
-};
-
-app.use(employees);
 
 app.use((req, res, next)=>{
   if(req.query.errorMes === 'unauthozized'){
@@ -62,12 +57,15 @@ app.post('/process_login',(req, res, next)=>{
 });
 
 app.get('/welcome',(req, res, next)=>{
+  if(typeof req.cookies.username === 'undefined') {
+    res.redirect('/?msg=unauthorized')
+  }else{
     res.render('welcome',{
       username: req.cookies.username,
       firstKey: "Ez az első kulcs értéke!",
       secondKey: "Ez a második kulcs értéke!"
-  });
-});
+    });
+}});
 
 app.param('id',(req, res, next, id)=>{
   next();
@@ -75,12 +73,6 @@ app.param('id',(req, res, next, id)=>{
 
 app.get('/info/:infoId/:link',(req, res, next)=>{
   res.send(`<h1>Main ${req.params.infoId} - ${req.params.link}</h1><p><a href="/logout">Log out</a></p>`)
-});
-
-app.get('/users',(req, res, next)=>{
-    res.render('users',{
-        fullTable: res.locals.employees
-    });
 });
 
 app.get('/logout',(req, res, next)=>{
