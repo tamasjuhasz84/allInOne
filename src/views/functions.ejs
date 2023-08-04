@@ -1,0 +1,78 @@
+<%- include('header'); -%>
+<%- include('navbar'); -%>
+
+
+<div class="body">
+  <h2>Szorzós példa</h2>    
+  <div class="form">
+    <form action="/process_multiplication" method="post" class="login-form">
+      <label for="firstNum">Első szám:</label>
+      <input type="number" id="firstNum" name="firstNum">
+      <label for="secondNum">Második szám:</label>
+      <input type="number" id="secondNum" name="secondNum">
+      <label for="resultNum">Eredmény:</label>
+      <% if (typeof resultNum != "undefined") { %>
+        <input type="number" id="resultNum" name="resultNum" value=<%= resultNum %> disabled>
+        <%} else { %>
+        <input type="number" id="resultNum" name="resultNum" value="0" disabled>
+        <% } %>     
+      <button>Szoroz</button>
+    </form>
+  </div>
+</div>
+
+<div class="body">
+  <h2>km/h-ból m/s példa</h2>    
+  <div class="form">
+    <form action="/process_speed" method="post" class="login-form">
+      <label for="distance">Megtett út (km):</label>
+      <input type="number" id="distance" name="distance">
+      <label for="time">Idő (h):</label>
+      <input type="number" id="time" name="time">
+      <label for="speedResultNum">Eredmény (m/s):</label>
+      <% if (typeof speedResultNum != "undefined") { %>
+        <input type="number" id="speedResultNum" name="speedResultNum" value=<%= speedResultNum %> disabled>
+        <%} else { %>
+        <input type="number" id="speedResultNum" name="speedResultNum" value="0" disabled>
+        <% } %>     
+      <button>Átvált</button>
+    </form>
+  </div>
+</div>
+
+<div class="body">
+  <h2>Adatbázis hozzáadás példa</h2>    
+  <div class="form">
+    <form action="/process_create" method="post" class="login-form">
+      <label for="name">Név:</label>
+      <input type="text" id="name" name="name">
+      <label for="age">Életkor:</label>
+      <input type="number" id="age" name="age">
+      <label for="os">Operációs rendszer:</label>
+      <input type="text" id="os" name="os">
+      <label for="activeWorker">Aktív dolgozó:</label>
+      <input type="text" id="activeWorker" name="activeWorker">
+      <label for="pw">Jelszó:</label>
+      <input type="number" id="pw" name="pw">
+      <button>Hozzáad</button>
+    </form>
+  </div>
+  <p><%= resDataMes %></p>
+</div>
+
+<div class="body">
+  <h2>Adatbázis hossza példa</h2>    
+  <div class="form">
+    <form action="/process_query" method="post" class="login-form">
+      <label for="countEmployees">A dolgozók száma:</label>
+      <% if (typeof countEmployees != "undefined") { %>
+        <input type="number" id="countEmployees" name="countEmployees" value=<%= countEmployees %> disabled>
+        <%} else { %>
+        <input type="number" id="countEmployees" name="countEmployees" value="0" disabled>
+        <% } %>     
+      <button>Megszámol</button>
+    </form>
+  </div>
+</div>
+
+<div><p><a href="/logout">Log out</a></p></div>

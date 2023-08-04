@@ -5,3 +5,7 @@ body{
 img{
     max-width: 200px;
 }
+
+form{
+    padding: 4vh;
+}
