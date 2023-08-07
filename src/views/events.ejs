@@ -1,0 +1,26 @@
+<%- include('header'); -%>
+<%- include('navbar'); -%>
+
+
+<div class="body">
+  <h2>Feliratkozás eseményre példa</h2>  
+  <div>
+    <% function getFirstEvent() { %>
+      console.log('<%= firstEvent %>');
+    <% }; %>
+
+    <% function getSecondEvent() { %>
+      console.log('<%= secondEvent %>');
+    <% }; %>
+
+    <% function getThirdEvent() { %>
+      console.log('<%= thirdEvent %>');
+    <% }; %>
+    
+    <button onclick=<%= getFirstEvent() %> ondblclick=<%= getSecondEvent() %> onmouseover=<%= getThirdEvent() %>>Click</button>
+  </div>
+</div>
+
+
+
+<div><p><a href="/logout">Log out</a></p></div>

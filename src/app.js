@@ -22,14 +22,14 @@ const sequelize = new Sequelize({
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require( 'express' );
-const app     = express();
-const helmet = require('helmet');
+const app = express();
+//const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-const port    = process.env.PORT || 1024;
+const port = process.env.PORT || 1024;
 const routerForUsers = require('./routerForUsers');
 
 app.use('/users',routerForUsers);
-app.use(helmet());
+//app.use(helmet());
 app.use(cookieParser());
 app.use(express.static('public'));
 app.use(express.json());
@@ -58,6 +58,14 @@ function multiplication(a, b) {
   return a * b;
 };
 
+function division(a, b) {
+  return a / b;
+};
+
+function subtraction(a, b) {
+  return a - b;
+};
+
 function speed(a, b) {
   return (a / b)/3.6;
 };
@@ -69,6 +77,8 @@ async function employees (req,res,next){
 
 module.exports.multiplication = multiplication;
 module.exports.speed = speed;
+module.exports.division = division;
+module.exports.subtraction = subtraction;
 
 app.use(employees);
 app.use((req, res, next)=>{
@@ -186,6 +196,19 @@ app.post('/process_query', (req, res, next)=>{
   res.cookie('countEmployees',countEmployees);
   logger.debug('A dolgozók száma összesen : ' + countEmployees);
   res.redirect('/functions');
+  next();
+});
+
+app.get('/events',(req, res, next)=>{
+  if(typeof req.cookies.username === 'undefined') {
+      res.redirect('/?msg=unauthorized')
+  }else{
+      res.render('events', {
+        firstEvent: multiplication(5,5),
+        secondEvent: division(10,2),
+        thirdEvent: subtraction(20,7)
+      });
+  };  
   next();
 });
 
