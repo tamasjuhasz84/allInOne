@@ -5,6 +5,7 @@ const sequelize = new Sequelize({
   storage: "./database.sqlite"
 });
 
+//define datatable and hooks
 const User = sequelize.define("user", {
   name: DataTypes.TEXT,
   age: DataTypes.INTEGER,
@@ -30,7 +31,7 @@ const User = sequelize.define("user", {
   }
 });
 
-
+//app const
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -41,12 +42,22 @@ const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 1024;
 const routerForUsers = require('./routerForUsers');
 
+//app use and set
 app.use('/users', routerForUsers);
 //app.use(helmet());
 app.use(cookieParser());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(employees);
+app.use((req, res, next) => {
+  if (req.query.errorMes === 'unauthozized') {
+    res.locals.errorMes = `Validation problem.`
+  } else {
+    res.locals.errorMes = ``
+  }
+  next()
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -93,16 +104,26 @@ module.exports.speed = speed;
 module.exports.division = division;
 module.exports.subtraction = subtraction;
 
-app.use(employees);
-app.use((req, res, next) => {
-  if (req.query.errorMes === 'unauthozized') {
-    res.locals.errorMes = `Validation problem.`
-  } else {
-    res.locals.errorMes = ``
-  }
-  next()
+//create custom event listener
+app.on('testEvent', function () {
+  return console.log('Event fülön van az emit, és ez a válasz a testEvent-re!');
 });
 
+app.on('testEvent2', function(a, b) {
+  setImmediate(() => {
+    console.log('Előző eset asynchron módon');
+  });
+});
+
+app.once('testEvent3', function () {
+  return console.log('Csak egyszer válaszol!');
+});
+
+app.on('error', (err) => {
+  console.error('Itt error üzenetet dob!');
+});
+
+//render pages
 app.get('/', (req, res, next) => {
   const errorMes = req.query.errorMes;
   if (errorMes === 'unauthozized') {
@@ -215,6 +236,10 @@ app.post('/process_query', (req, res, next) => {
 });
 
 app.get('/events', (req, res, next) => {
+  app.emit('testEvent');
+  app.emit('testEvent2', 'a', 'b');
+  app.emit('error', new Error('Error'));
+  app.emit('testEvent3');
   if (typeof req.cookies.username === 'undefined') {
     res.redirect('/?msg=unauthorized')
   } else {
