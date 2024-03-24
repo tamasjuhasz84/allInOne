@@ -1,16 +1,15 @@
-const multiplication = require('../src/app').multiplication;
-const speed = require('../src/app').speed;
+import funcs from "../src/app.js";
+import { Sequelize, QueryTypes } from "sequelize";
 
 test('Szamok szorzasa', () => {
-  expect(multiplication(5, 4)).toBe(20);
+  expect(funcs.multiplication(5, 4)).toBe(20);
 });
 
 test('km/h atvaltas m/s-re', () => {
-    expect(speed(120, 2)).toBe(16.666666666666668);
+    expect(funcs.speed(120, 2)).toBe(16.666666666666668);
   });
   
 test('Adatbázis hossza', async () => {
-  const { Sequelize, QueryTypes } = require("sequelize");
   const sequelize = new Sequelize({
     dialect: "sqlite",
     storage: "./database.sqlite"

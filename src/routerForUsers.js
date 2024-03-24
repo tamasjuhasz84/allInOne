@@ -1,12 +1,12 @@
-const { Sequelize, QueryTypes } = require("sequelize");
+import { Sequelize, QueryTypes } from "sequelize";
 const sequelize = new Sequelize({
     dialect: "sqlite",
     storage: "./database.sqlite"
   });
 
-const express = require('express');
-const router = express.Router()
-const cookieParser = require('cookie-parser');
+import express from "express";
+const router = express.Router();
+import cookieParser from "cookie-parser";
 
 async function employees (req,res,next){
     res.locals.employees = await sequelize.query("SELECT * FROM `Employees`", { type: QueryTypes.SELECT }); 
@@ -25,4 +25,4 @@ router.get('/',(req, res, next)=>{
     });
 }});
 
-module.exports = router;
+export default router;

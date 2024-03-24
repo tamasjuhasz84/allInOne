@@ -1,5 +1,5 @@
 //Database connection part
-const { Sequelize, QueryTypes, DataTypes } = require("sequelize");
+import { Sequelize, QueryTypes, DataTypes } from "sequelize";
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.sqlite"
@@ -32,15 +32,19 @@ const User = sequelize.define("user", {
 });
 
 //app const
-const path = require('path');
-const bodyParser = require('body-parser');
-const express = require('express');
+import path from "path";
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import bodyParser from "body-parser";
+import express from "express";
 const app = express();
 var admin = express()
-//const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
+//import helmet = from "helmet";
+import cookieParser from "cookie-parser";
 const port = process.env.PORT || 1024;
-const routerForUsers = require('./routerForUsers');
+import routerForUsers from "./routerForUsers.js";
+import session from "express-session";
 
 //app use and set
 app.use('/users', routerForUsers);
@@ -58,12 +62,17 @@ app.use((req, res, next) => {
   }
   next()
 });
+app.use(session({
+  secret: 'any',
+  resave: true,
+  saveUninitialized: true
+}));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/views'))
+app.set('view engine', 'ejs')
 
 //log config part
-const log4js = require("log4js");
+import log4js from "log4js";
 const logger = log4js.getLogger();
 log4js.configure({
   appenders: {
@@ -78,35 +87,35 @@ log4js.configure({
 });
 
 //Functions
-function multiplication(a, b) {
+const funcs = {
+multiplication(a, b) {
   return a * b;
-};
-
-function division(a, b) {
+},
+division(a, b) {
   return a / b;
-};
-
-function subtraction(a, b) {
+},
+subtraction(a, b) {
   return a - b;
+},
+speed(a, b) {
+  return (a / b) / 3.6;
+},
 };
 
-function speed(a, b) {
-  return (a / b) / 3.6;
-};
+export default funcs;
 
 async function employees(req, res, next) {
   res.locals.employees = await sequelize.query("SELECT * FROM `Employees`", { type: QueryTypes.SELECT });
   next();
 };
 
-module.exports.multiplication = multiplication;
-module.exports.speed = speed;
-module.exports.division = division;
-module.exports.subtraction = subtraction;
-
 //create custom event listener
 app.on('testEvent', function () {
   return console.log('Event fülön van az emit, és ez a válasz a testEvent-re!');
+});
+
+app.on('valueChange', function (someData) {
+  return console.log('Feliratkozva a státusz változásra:', someData);
 });
 
 app.on('testEvent2', function(a, b) {
@@ -128,7 +137,7 @@ app.get('/', (req, res, next) => {
   const errorMes = req.query.errorMes;
   if (errorMes === 'unauthozized') {
   }
-  res.render('login')
+  res.render('login');
 });
 
 app.post('/process_login', (req, res, next) => {
@@ -239,14 +248,13 @@ app.get('/events', (req, res, next) => {
   app.emit('testEvent');
   app.emit('testEvent2', 'a', 'b');
   app.emit('error', new Error('Error'));
-  app.emit('testEvent3');
   if (typeof req.cookies.username === 'undefined') {
     res.redirect('/?msg=unauthorized')
   } else {
     res.render('events', {
-      firstEvent: multiplication(5, 5),
-      secondEvent: division(10, 2),
-      thirdEvent: subtraction(20, 7)
+      firstEvent: funcs.multiplication(5, 5),
+      secondEvent: funcs.division(10, 2),
+      thirdEvent: funcs.subtraction(20, 7),
     });
   };
   next();
