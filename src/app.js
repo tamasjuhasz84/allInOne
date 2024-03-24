@@ -114,8 +114,8 @@ app.on('testEvent', function () {
   return console.log('Event fülön van az emit, és ez a válasz a testEvent-re!');
 });
 
-app.on('valueChange', function (someData) {
-  return console.log('Feliratkozva a státusz változásra:', someData);
+app.on('valueChange', function (resultNum) {
+  return console.log('Feliratkozás client oldalon lévő szorzás eredményére:', resultNum);
 });
 
 app.on('testEvent2', function(a, b) {
@@ -196,7 +196,8 @@ app.get('/functions', (req, res, next) => {
 
 app.post('/process_multiplication', (req, res, next) => {
   res.clearCookie('resultNum');
-  const resultNum = multiplication(req.body.firstNum, req.body.secondNum);
+  const resultNum = funcs.multiplication(req.body.firstNum, req.body.secondNum);
+  app.emit('valueChange', resultNum);
   res.cookie('resultNum', resultNum);
   logger.debug('Szorzás funkció eredménye: ' + resultNum);
   res.redirect('/functions');
@@ -205,7 +206,7 @@ app.post('/process_multiplication', (req, res, next) => {
 
 app.post('/process_speed', (req, res, next) => {
   res.clearCookie('speedResultNum');
-  const speedResultNum = speed(req.body.distance, req.body.time);
+  const speedResultNum = funcs.speed(req.body.distance, req.body.time);
   res.cookie('speedResultNum', speedResultNum);
   logger.debug('Átváltás eredménye : ' + speedResultNum);
   res.redirect('/functions');
