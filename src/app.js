@@ -32,7 +32,7 @@ const User = sequelize.define("user", {
 });
 
 //app const
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +45,10 @@ import cookieParser from "cookie-parser";
 const port = process.env.PORT || 1024;
 import routerForUsers from "./routerForUsers.js";
 import session from "express-session";
+import { createServer } from "http";
+const server = createServer(app);
+import { Server } from "socket.io";
+const io = new Server(server);
 
 //app use and set
 app.use('/users', routerForUsers);
@@ -110,6 +114,20 @@ async function employees(req, res, next) {
 };
 
 //create custom event listener
+io.on("connection", (socket) => {
+  console.log("Kapcsolódom a socketes menühöz!");
+
+  socket.on("disconnect", () => {
+    console.log("Most már nem a socketes menüben vagyok!");
+  });
+
+  socket.on("clientMessage", msg => {
+    console.log("Ez az üzenet jött a kliens oldalról: ", msg);
+  });
+
+  socket.emit("serverMessage", "Üzenet a szerver oldalról!");
+});
+
 app.on('testEvent', function () {
   return console.log('Event fülön van az emit, és ez a válasz a testEvent-re!');
 });
@@ -270,4 +288,9 @@ app.get('/logout', (req, res, next) => {
   res.redirect('/')
 });
 
-app.listen(port, console.log(`http://127.0.0.1:${port}`));
+app.get('/socket', (req, res, next) => {
+  res.render('socket', {});
+  next();
+});
+
+server.listen(port, console.log(`http://127.0.0.1:${port}`));

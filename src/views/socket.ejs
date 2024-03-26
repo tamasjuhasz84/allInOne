@@ -1,0 +1,27 @@
+<%- include('header'); -%>
+<%- include('navbar'); -%>
+
+<div class="body">
+
+<H1>Válasz a Szervertől</H1>
+<button type="submit" id="submit">Üzenet a szervernek</button>
+
+</div>
+
+<script src="socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  socket.on("connect", ()=> {
+    console.log("Minden kapcsolódásnál új id keletkezik: ",socket.id);
+  });
+
+  let submit = document.getElementById("submit");
+  submit.addEventListener("click", ()=> {
+    socket.emit('clientMessage', "Üzenet a kliens oldalról!");
+  });
+
+  socket.on("serverMessage", msg=> {
+    console.log(msg);
+  });
+</script>

@@ -24,6 +24,7 @@
     "prettier": "^3.2.5",
     "selenium-side-runner": "^4.0.1",
     "sequelize": "^6.37.1",
+    "socket.io": "^4.7.5",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
